@@ -1,5 +1,8 @@
-package com.project.gestao_sala.model;
+package com.project.gestao_sala.model.espaco;
 
+import com.project.gestao_sala.model.reserva.Reserva;
+import com.project.gestao_sala.model.categoria.Categoria;
+import com.project.gestao_sala.model.chave.Chave;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

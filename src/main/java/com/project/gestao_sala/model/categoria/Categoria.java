@@ -1,4 +1,4 @@
-package com.project.gestao_sala.model;
+package com.project.gestao_sala.model.categoria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
