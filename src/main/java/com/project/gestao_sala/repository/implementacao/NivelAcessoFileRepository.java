@@ -80,9 +80,12 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
             System.err.println("Erro ao adquirir lock ou serializar NivelAcesso: " + e.getMessage());
+        }finally {
+            if (lockHandle != null) {
+                fileStorage.unlock(FILENAME);
+            }
         }
     }
-
 
     private NivelAcesso deserializarNivelAcesso(String linha) {
         try {

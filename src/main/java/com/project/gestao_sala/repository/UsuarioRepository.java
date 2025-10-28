@@ -1,10 +1,10 @@
 package com.project.gestao_sala.repository;
 
-import com.project.gestao_sala.model.categoria.Categoria;
+import com.project.gestao_sala.model.usuario.Usuario;
 
 public interface UsuarioRepository {
-    Categoria buscar(String nome);
-    Categoria[] listar();
-    void salvar(Categoria c);
+    Usuario buscar(String nome);
+    Usuario[] listar();
+    void salvar(Usuario u);
 
 }
