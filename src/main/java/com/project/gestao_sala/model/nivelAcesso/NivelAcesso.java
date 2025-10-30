@@ -1,16 +1,17 @@
 package com.project.gestao_sala.model.nivelAcesso;
 
 import com.project.gestao_sala.enums.Permissao;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @ToString
-public class NivelAcesso {
+@NoArgsConstructor
+public class NivelAcesso implements Serializable {
     private int nivel;
-    private Permissao permissoes;
+    private Permissao[] permissoes;
+
 }

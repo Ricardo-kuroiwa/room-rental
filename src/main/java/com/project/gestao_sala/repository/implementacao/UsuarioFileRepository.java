@@ -32,7 +32,7 @@ public class UsuarioFileRepository  implements UsuarioRepository {
             throw new RuntimeException(e);
         } finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
@@ -48,7 +48,7 @@ public class UsuarioFileRepository  implements UsuarioRepository {
             throw new RuntimeException(e);
         } finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
@@ -71,7 +71,7 @@ public class UsuarioFileRepository  implements UsuarioRepository {
                     .collect(Collectors.joining("\n"));
 
             fileStorage.write(FILENAME, contentToSave.getBytes());
-            fileStorage.unlock(FILENAME);
+            fileStorage.unlock(lockHandle);
             lockHandle = null;
 
 
@@ -81,14 +81,14 @@ public class UsuarioFileRepository  implements UsuarioRepository {
             System.err.println("Erro ao adquirir lock ou serializar NivelAcesso: " + e.getMessage());
         }finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
 
     private Usuario deserializarUsuario(String linha) {
         try {
-            return (Usuario) serializer.deserialize(linha.getBytes());
+            return (Usuario) serializer.deserialize(linha.getBytes(),Usuario.class);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao deserializar linha: " + linha + " - " + e.getMessage());
             return null;

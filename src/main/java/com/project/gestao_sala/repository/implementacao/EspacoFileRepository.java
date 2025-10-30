@@ -32,7 +32,7 @@ public class EspacoFileRepository implements EspacoRepository {
             throw new RuntimeException(e);
         } finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
@@ -48,7 +48,7 @@ public class EspacoFileRepository implements EspacoRepository {
             throw new RuntimeException(e);
         } finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
@@ -71,7 +71,7 @@ public class EspacoFileRepository implements EspacoRepository {
                     .collect(Collectors.joining("\n"));
 
             fileStorage.write(FILENAME, contentToSave.getBytes());
-            fileStorage.unlock(FILENAME);
+            fileStorage.unlock(lockHandle);
             lockHandle = null;
 
 
@@ -81,14 +81,14 @@ public class EspacoFileRepository implements EspacoRepository {
             System.err.println("Erro ao adquirir lock ou serializar NivelAcesso: " + exception.getMessage());
         }finally {
             if (lockHandle != null) {
-                fileStorage.unlock(FILENAME);
+                fileStorage.unlock(lockHandle);
             }
         }
     }
 
     private Espaco deserializarEspaco(String linha) {
         try {
-            return (Espaco) serializer.deserialize(linha.getBytes());
+            return (Espaco) serializer.deserialize(linha.getBytes(),Espaco.class);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao deserializar linha: " + linha + " - " + e.getMessage());
             return null;

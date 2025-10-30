@@ -6,4 +6,7 @@ public interface NivelAcessoRepository {
     NivelAcesso buscar(int nivel);
     NivelAcesso[] listar();
     void salvar(NivelAcesso n);
+    void deletar(int nivel);
+    void atualizar(NivelAcesso n);
+
 }
