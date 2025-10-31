@@ -10,7 +10,4 @@ import lombok.Setter;
 public class UsuarioDepto extends Usuario{
     int ramal;
 
-    public UsuarioDepto(String nome, String email, String senhaHash, NivelAcesso nivel, int telefone) {
-        super(nome, email, senhaHash, nivel, telefone);
-    }
 }

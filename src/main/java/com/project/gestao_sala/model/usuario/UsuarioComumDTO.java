@@ -2,11 +2,10 @@ package com.project.gestao_sala.model.usuario;
 
 import com.project.gestao_sala.model.nivelAcesso.NivelAcesso;
 
-public record UsuarioDeptoDTO(
+public record UsuarioComumDTO(
         String nome,
         String email,
         String senhaHash,
         int nivel,
-        int telefone,
-        int ramal
+        int telefone
 ) implements UsuarioDTO {}
