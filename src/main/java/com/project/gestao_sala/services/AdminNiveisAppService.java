@@ -16,7 +16,7 @@ public class AdminNiveisAppService {
         this.nivelAcessoFileRepository = nivelAcessoFileRepository;
     }
 
-    public  boolean criarNivelAcesso(NivelAcessoDTO dto){
+    public boolean criarNivelAcesso(NivelAcessoDTO dto){
         try{
             NivelAcesso nivelAcesso = new NivelAcesso();
             nivelAcesso.setNivel(dto.nivel());
@@ -46,11 +46,9 @@ public class AdminNiveisAppService {
     }
     public boolean excluirNivelAcesso(int nivel){
         try{
-
-            nivelAcessoFileRepository.deletar(nivel);
-            return true;
+            return nivelAcessoFileRepository.deletar(nivel);
         }catch (Exception e){
-            System.err.println("Erro ao criar nível de acesso: " + e.getMessage());
+            System.err.println("Erro ao deletar nível de acesso: " + e.getMessage());
             return false;
         }
     }
@@ -69,4 +67,7 @@ public class AdminNiveisAppService {
             return new NivelAcessoDTO[0];
         }
     }
+
+
+
 }

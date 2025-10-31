@@ -1,0 +1,3 @@
+{"nome":"Sala de professores","descricao":"Capcidade de 20 pessoas"}
+{"nome":"Sala de Musica Especial","descricao":"Capcidade de 20 pessoas"}
+{"nome":"Sala de Musica","descricao":"Capcidade de 230 pessoas"}

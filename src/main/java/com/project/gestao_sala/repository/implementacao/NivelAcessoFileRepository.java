@@ -58,7 +58,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public void salvar(NivelAcesso n) {
+    public boolean salvar(NivelAcesso n) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -75,11 +75,10 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
                     .collect(Collectors.joining("\n"));
 
             fileStorage.write(lockHandle, contentToSave.getBytes());
-
-        } catch (IOException e) {
-            throw new RuntimeException("Erro de IO ao salvar NivelAcesso", e);
+            return true;
         } catch (Exception e) {
-            throw new RuntimeException("Erro inesperado ao salvar NivelAcesso: " + e.getMessage(), e);
+            System.err.println("Erro inesperado ao salvar NivelAcesso: " + e.getMessage());
+            return false;
         } finally {
             if (lockHandle != null) {
                 fileStorage.unlock(lockHandle);
@@ -88,7 +87,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public void deletar(int nivel){
+    public boolean deletar(int nivel) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -106,11 +105,10 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
                     .collect(Collectors.joining("\n"));
 
             fileStorage.write(lockHandle, contentToSave.getBytes());
-
-        } catch (IOException e) {
-            throw new RuntimeException("Erro de IO ao deletar NivelAcesso", e);
+            return true;
         } catch (Exception e) {
-            throw new RuntimeException("Erro inesperado ao deletar NivelAcesso: " + e.getMessage(), e);
+            System.err.println("Erro inesperado ao deletar NivelAcesso: " + e.getMessage());
+            return false;
         } finally {
             if (lockHandle != null) {
                 fileStorage.unlock(lockHandle);
@@ -119,7 +117,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public void atualizar(NivelAcesso n){
+    public boolean atualizar(NivelAcesso n) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -139,12 +137,13 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
                         .collect(Collectors.joining("\n"));
 
                 fileStorage.write(lockHandle, contentToSave.getBytes());
+                return true;
             } else {
                 throw new RuntimeException("Nível de acesso não encontrado para atualização: " + n.getNivel());
-            } } catch (IOException e) {
-            throw new RuntimeException("Erro de IO ao atualizar NivelAcesso", e);
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Erro inesperado ao atualizar NivelAcesso: " + e.getMessage(), e);
+            System.err.println("Erro inesperado ao atualizar NivelAcesso: " + e.getMessage());
+            return false;
         } finally {
             if (lockHandle != null) {
                 fileStorage.unlock(lockHandle);
