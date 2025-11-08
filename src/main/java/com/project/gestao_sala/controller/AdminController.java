@@ -11,7 +11,7 @@ import com.project.gestao_sala.services.AdminUsuariosAppService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +22,6 @@ public class AdminController {
     private final AdminNiveisAppService adminNiveisAppService;
     private final AdminCategoriasAppService adminCategoriasAppService;
     private final AdminUsuariosAppService adminUsuariosAppService;
-
     public AdminController(AdminNiveisAppService adminNiveisAppService,
                            AdminCategoriasAppService adminCategoriasAppService,
                            AdminUsuariosAppService adminUsuariosAppService) {

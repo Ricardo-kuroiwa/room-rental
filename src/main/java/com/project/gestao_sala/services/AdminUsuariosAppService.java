@@ -5,7 +5,10 @@ import com.project.gestao_sala.model.nivelAcesso.NivelAcessoDTO;
 import com.project.gestao_sala.model.usuario.*;
 import com.project.gestao_sala.repository.NivelAcessoRepository;
 import com.project.gestao_sala.repository.UsuarioRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 
@@ -13,11 +16,12 @@ import java.util.Arrays;
 public class AdminUsuariosAppService {
     private final UsuarioRepository usuarioRepository;
     private final NivelAcessoRepository nivelAcessoRepository;
-
+    private  final BCryptPasswordEncoder passwordEncoder;
     public AdminUsuariosAppService(UsuarioRepository usuarioRepository,
                                    NivelAcessoRepository nivelAcessoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.nivelAcessoRepository = nivelAcessoRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public boolean criarUsuarioComum(UsuarioComumDTO dto) {
@@ -31,7 +35,7 @@ public class AdminUsuariosAppService {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
-        usuario.setSenhaHash(dto.senhaHash());
+        usuario.setSenhaHash( passwordEncoder.encode( dto.senhaHash()) );
         usuario.setNivel(nivel);  // Atribui o objeto completo
         usuario.setTelefone(dto.telefone());
         return usuarioRepository.salvar(usuario);
@@ -48,8 +52,8 @@ public class AdminUsuariosAppService {
         UsuarioDepto usuario = new UsuarioDepto();
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
-        usuario.setSenhaHash(dto.senhaHash());
-        usuario.setNivel(nivel);  // Atribui o objeto completo
+        usuario.setSenhaHash(passwordEncoder.encode(dto.senhaHash()));
+        usuario.setNivel(nivel);
         usuario.setTelefone(dto.telefone());
         usuario.setRamal(dto.ramal());
         return usuarioRepository.salvar(usuario);
@@ -70,7 +74,9 @@ public class AdminUsuariosAppService {
             }
 
             usuario.setNome(dto.nome());
-            usuario.setSenhaHash(dto.senhaHash());
+            if (StringUtils.hasText(dto.senhaHash())) {
+                usuario.setSenhaHash(passwordEncoder.encode(dto.senhaHash()));
+            }
             usuario.setNivel(nivel);
             usuario.setTelefone(dto.telefone());
             return usuarioRepository.atualizar(usuario);
@@ -96,7 +102,9 @@ public class AdminUsuariosAppService {
 
             UsuarioDepto usuarioDepto = (UsuarioDepto) usuario;
             usuarioDepto.setNome(dto.nome());
-            usuarioDepto.setSenhaHash(dto.senhaHash());
+            if (StringUtils.hasText(dto.senhaHash())) {
+                usuarioDepto.setSenhaHash(passwordEncoder.encode(dto.senhaHash()));
+            }
             usuarioDepto.setNivel(nivel);
             usuarioDepto.setTelefone(dto.telefone());
             usuarioDepto.setRamal(dto.ramal());

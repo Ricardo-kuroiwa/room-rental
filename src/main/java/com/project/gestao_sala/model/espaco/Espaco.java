@@ -1,22 +1,18 @@
 package com.project.gestao_sala.model.espaco;
 
+import com.project.gestao_sala.enums.TipoAcesso;
 import com.project.gestao_sala.model.reserva.Reserva;
 import com.project.gestao_sala.model.categoria.Categoria;
 import com.project.gestao_sala.model.chave.Chave;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
+@NoArgsConstructor
 
 public class Espaco {
     private char codigo;
@@ -24,21 +20,16 @@ public class Espaco {
     private String tipo;
     private String predio;
     private int capacidade;
-    private String acesso;
+    private TipoAcesso acesso;
     private boolean ativo;
     private List<Reserva> reservas =  new ArrayList<>();
     private List<Chave> chaves = new ArrayList<>();
     private Categoria categoria;
+    
     public  void AdicionarReserva( Reserva r){
+        if(r != null){
+            reservas.add(r);
+        }
+    }
 
-    }
-    public boolean vereficarDisponivbilidade(LocalDate data, LocalTime inicio,LocalTime fim){
-        return true;
-    }
-    public void cancelarReserva(String protocolo,String email,LocalTime gora){
-
-    }
-    public Reserva obterReserva(String protocolo){
-        return null;
-    }
 }

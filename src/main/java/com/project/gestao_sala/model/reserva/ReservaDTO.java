@@ -1,12 +1,12 @@
 package com.project.gestao_sala.model.reserva;
 
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record ReservaDTO(
-        Date data,
-        Time horaInicio,
-        Time horaFim,
-        char espaco
+        LocalDateTime data,
+        LocalDateTime horaInicio,
+        LocalDateTime horaFim,
+        char espaco,
+        String email
 ) {
 }
