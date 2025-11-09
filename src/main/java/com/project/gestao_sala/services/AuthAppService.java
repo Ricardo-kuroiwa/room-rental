@@ -75,6 +75,8 @@ public class AuthAppService {
                 System.err.println("Erro ao recuperar Senha: usuario nao existe");
                 return false;
             }
+            String novaSenhaHash = passwordEncoder.encode(novaSenha);
+            usuarioTarget.setSenhaHash(novaSenhaHash);
             boolean ok = usuarioRepository.atualizar(usuarioTarget);
 
             if (ok) {

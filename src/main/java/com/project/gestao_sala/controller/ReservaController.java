@@ -1,12 +1,14 @@
 package com.project.gestao_sala.controller;
 
 import com.project.gestao_sala.model.reserva.ReservaDTO;
+import com.project.gestao_sala.model.reserva.ReservaFiltroUsuarioDTO;
+import com.project.gestao_sala.model.reserva.ReservaUsuarioDTO;
 import com.project.gestao_sala.services.ReservaAppService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reserva")
@@ -17,7 +19,7 @@ public class ReservaController {
         this.reservaAppService = reservaAppService;
     }
     @PostMapping("/create")
-    public ResponseEntity<String> fazerReserva(ReservaDTO dto) {
+    public ResponseEntity<String> fazerReserva(@RequestBody ReservaDTO dto) {
         boolean sucesso = reservaAppService.fazerReserva(dto);
         if (sucesso) {
             return ResponseEntity.status(HttpStatus.CREATED).body("Reserva criada com sucesso!");
@@ -25,6 +27,12 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Falha ao criar reserva devido a um erro interno.");
         }
-
+    }
+    @GetMapping("/usuario/{email}")
+    public ResponseEntity<List<ReservaUsuarioDTO>> buscarReservasPorUsuario(
+            @PathVariable String email,
+            @ModelAttribute ReservaFiltroUsuarioDTO filtros) {
+        List<ReservaUsuarioDTO> reservasDoUsuario = reservaAppService.listarReservasPorUsuario(email,filtros);
+        return ResponseEntity.ok(reservasDoUsuario);
     }
 }

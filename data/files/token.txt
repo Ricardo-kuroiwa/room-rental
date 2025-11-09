@@ -1,0 +1,4 @@
+{"token":"e0f5d928-7165-4a64-9ce3-a4b731a887a0","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:45"}
+{"token":"315e0fd5-bfad-471b-8362-5c1dce56b6e4","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:44"}
+{"token":"3ef1f07c-44da-4717-a270-9ab4bb4c234e","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:43"}
+{"token":"1fd97d8d-02ef-4104-97f4-fae2aefeb549","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:42"}

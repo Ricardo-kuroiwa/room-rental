@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("auth/")
 public class AuthController {
@@ -16,38 +18,41 @@ public class AuthController {
     public AuthController(AuthAppService authAppService) {
         this.authAppService = authAppService;
     }
+
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDTO dto){
-        boolean result  = authAppService.autenticar(dto.email(), dto.senha());
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO dto) {
+        boolean result = authAppService.autenticar(dto.email(), dto.senha());
         if (result) {
-            return ResponseEntity.status(HttpStatus.OK).body("Login com sucesso!");
+            return ResponseEntity.ok(Map.of("message", "Login bem-sucedido!"));
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao autenticar devido a um erro interno.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Credenciais inválidas."));
         }
     }
-    @PostMapping("/password/recovery/")
-    public ResponseEntity<String> solicitarRecuperacao(@RequestBody RequestTokenDTO dto){
-        boolean result  = authAppService.enviarTokenRecuperacao(dto.email());
+
+    @PostMapping("/password/recovery")
+    public ResponseEntity<?> solicitarRecuperacao(@RequestBody RequestTokenDTO dto) {
+        boolean result = authAppService.enviarTokenRecuperacao(dto.email());
         if (result) {
-            return ResponseEntity.status(HttpStatus.OK).body("Solicitacao de recuperacao com sucesso!");
+            return ResponseEntity.ok(Map.of("message", "Se o e-mail estiver cadastrado, um link de recuperação foi enviado."));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao solicitar devido a um erro interno.");
+                    .body(Map.of("error", "Falha ao processar a solicitação."));
         }
     }
+
     @PostMapping("/password/reset")
-    public ResponseEntity<String> redefinirSenha(@RequestBody ResetPasswordDTO dto){
-        boolean result  = authAppService.recuperarSenha(
+    public ResponseEntity<?> redefinirSenha(@RequestBody ResetPasswordDTO dto) {
+        boolean result = authAppService.recuperarSenha(
                 dto.token(),
                 dto.email(),
                 dto.password()
         );
         if (result) {
-            return ResponseEntity.status(HttpStatus.OK).body("Reset da senha com sucesso!");
+            return ResponseEntity.ok(Map.of("message", "Senha redefinida com sucesso!"));
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Falha ao solicitar devido a um erro interno.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Falha ao redefinir a senha. O token pode ser inválido ou expirado."));
         }
     }
 }

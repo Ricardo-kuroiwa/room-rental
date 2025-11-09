@@ -119,15 +119,17 @@ public class EspacoFileRepository implements EspacoRepository {
     }
 
     @Override
-    public boolean atualizar(Espaco e){
+    public boolean atualizar(Espaco e) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
             List<Espaco> espacos = listarTodos(lockHandle);
 
-            Optional<Espaco> existente = Optional.ofNullable(buscar(e.getCodigo()));
+            Optional<Espaco> existenteOpt = espacos.stream()
+                    .filter(espaco -> espaco.getCodigo() == e.getCodigo())
+                    .findFirst();
 
-            if (existente.isPresent()) {
+            if (existenteOpt.isPresent()) {
                 espacos.removeIf(espaco -> espaco.getCodigo() == e.getCodigo());
                 espacos.add(e);
 
@@ -141,17 +143,18 @@ public class EspacoFileRepository implements EspacoRepository {
                 fileStorage.write(lockHandle, contentToSave.getBytes());
                 return true;
             } else {
-                throw new RuntimeException("Espaco não encontrado para atualização: " + e.getCodigo());
+                System.err.println("Espaco com código '" + e.getCodigo() + "' não encontrado na lista para atualização.");
+                return false;
             }
         } catch (Exception exception) {
             System.err.println("Erro inesperado ao atualizar Espaco: " + exception.getMessage());
+            exception.printStackTrace();
             return false;
         } finally {
             if (lockHandle != null) {
                 fileStorage.unlock(lockHandle);
             }
         }
-
     }
     @Override
     public boolean criarNovaReserva(char codigoEspaco, Reserva novaReserva) {

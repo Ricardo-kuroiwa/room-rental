@@ -3,57 +3,85 @@ package com.project.gestao_sala.services;
 import com.project.gestao_sala.model.espaco.Espaco;
 import com.project.gestao_sala.model.reserva.Reserva;
 import com.project.gestao_sala.model.reserva.ReservaDTO;
+import com.project.gestao_sala.model.reserva.ReservaFiltroUsuarioDTO;
+import com.project.gestao_sala.model.reserva.ReservaUsuarioDTO;
 import com.project.gestao_sala.repository.implementacao.EspacoFileRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservaAppService {
+
     private final EspacoFileRepository espacoFileRepository;
     private final ReservaService reservaService;
 
-    public ReservaAppService(EspacoFileRepository espacoFileRepository, ReservaService reservaService) {
+    public ReservaAppService(EspacoFileRepository espacoFileRepository,
+                             ReservaService reservaService) {
         this.espacoFileRepository = espacoFileRepository;
         this.reservaService = reservaService;
     }
 
+    public List<ReservaUsuarioDTO> listarReservasPorUsuario(String email,
+                                                            ReservaFiltroUsuarioDTO filtros) {
+        return Arrays.stream(espacoFileRepository.listar())
+                .filter(e -> filtros.codigoEspaco() == null ||
+                        e.getCodigo() == filtros.codigoEspaco())
+                .flatMap(e -> e.getReservas().stream()
+                        .filter(r -> email.equalsIgnoreCase(r.getEmailUsuario()))
+                        .filter(r -> aplicarFiltros(r, filtros))
+                        .map(r -> toDTO(r, e)))
+                .collect(Collectors.toList());
+    }
+
+    private boolean aplicarFiltros(Reserva r, ReservaFiltroUsuarioDTO f) {
+        if (f == null) {
+            System.out.println("Aqui aaaaaaaaaaaaaaaaa");
+            return true;
+        }
+        if (f.ativa() != null && r.isAtiva() != f.ativa())
+            return false;
+        if (f.protocolo() != null &&
+                !r.getProtocolo().contains(f.protocolo())) return false;
+        if (f.dataInicio() != null) {
+            LocalDate data = r.getData().toLocalDate();
+            if (data.isBefore(f.dataInicio())) return false;
+        }
+        return true;
+    }
+
+    private ReservaUsuarioDTO toDTO(Reserva r, Espaco e) {
+        return new ReservaUsuarioDTO(
+                r.getProtocolo(),
+                e.getCodigo(),
+                r.getData(),
+                r.getHoraInicio(),
+                r.getHoraFim(),
+                r.getDataCriacao(),
+                r.getDataCancelamento(),
+                r.isAtiva()
+        );
+    }
+
     public boolean fazerReserva(ReservaDTO dto) {
-        // 1. Buscar o espaço alvo
         Espaco espacoTarget = espacoFileRepository.buscar(dto.espaco());
-        if (espacoTarget == null) {
-            System.err.println("Espaço inexistente: " + dto.espaco());
-            return false;
-        }
+        if (espacoTarget == null) return false;
+        if (!espacoTarget.isAtivo()) return false;
+        if (dto.horaFim().isBefore(dto.horaInicio()) ||
+                dto.horaFim().equals(dto.horaInicio())) return false;
 
-        // 2. Verificar se o espaço está disponível para reservas
-        if (!espacoTarget.isAtivo()) {
-            System.err.println("Espaço inativo: " + dto.espaco());
-            return false;
-        }
+        Reserva nova = new Reserva();
+        nova.setData(dto.data());
+        nova.setHoraInicio(dto.horaInicio());
+        nova.setHoraFim(LocalTime.from(dto.horaFim()));
+        nova.setEmailUsuario(dto.email());
+        nova.setDataCriacao(LocalDateTime.now());
 
-        // 3. Validar a consistência do horário
-        if (dto.horaFim().isBefore(dto.horaInicio()) || dto.horaFim().equals(dto.horaInicio())) {
-            System.err.println("A hora de fim deve ser posterior à hora de início.");
-            return false;
-        }
-
-        Reserva novaReserva = new Reserva();
-        novaReserva.setData(LocalTime.from(dto.data()));
-        novaReserva.setHoraInicio(dto.horaInicio().toLocalTime());
-        novaReserva.setHoraFim(LocalTime.from(dto.horaFim()));
-        novaReserva.setEmailUsuario(dto.email());
-        novaReserva.setDataCriacao(LocalDateTime.now());
-        // 5. Delegar a criação para o ReservaService
-        boolean sucesso = reservaService.criarNovaReserva(espacoTarget, novaReserva);
-
-        if (!sucesso) {
-            System.err.println("Não foi possível completar a reserva para o espaço: " + dto.espaco());
-            return false;
-
-        }
-
-        return sucesso;
+        return reservaService.criarNovaReserva(espacoTarget, nova);
     }
 }

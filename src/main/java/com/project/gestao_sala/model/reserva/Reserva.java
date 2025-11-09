@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 public class Reserva {
-    private LocalTime data;
+    private LocalDateTime data;
     private LocalTime horaInicio;
     private LocalTime horaFim;
     private String emailUsuario;
