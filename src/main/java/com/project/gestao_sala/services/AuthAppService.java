@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
-@RequestMapping("/login")
 public class AuthAppService {
     private final UsuarioRepository usuarioRepository;
     private  final AuthFileRepository authFileRepository;

@@ -18,7 +18,7 @@ public class EspacoController {
     public EspacoController(AdminEspacosAppServices adminEspacosAppServices) {
         this.adminEspacosAppServices = adminEspacosAppServices;
     }
-    @RequestMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<String> criarEspaco(@RequestBody  EspacoDTO dto){
         boolean sucesso = adminEspacosAppServices.criarEspaco(dto);
         if (sucesso) {
