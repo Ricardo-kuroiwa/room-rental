@@ -12,6 +12,4 @@ public record ReservaUsuarioDTO(
         LocalDateTime dataCriacao,
         LocalDateTime dataCancelamento,
         boolean ativa
-
-) {
-}
+) {}

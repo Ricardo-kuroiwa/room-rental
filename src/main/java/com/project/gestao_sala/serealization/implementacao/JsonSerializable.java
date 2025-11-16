@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.project.gestao_sala.exceptions.InfrastructureException;
 import com.project.gestao_sala.model.nivelAcesso.NivelAcesso;
 import com.project.gestao_sala.serealization.Serializer;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class JsonSerializable implements Serializer {
             // Converte o objeto para JSON
             return objectMapper.writeValueAsBytes(obj);
         } catch (JsonProcessingException e) {
-            throw new IOException("Erro ao serializar objeto para JSON: " + e.getMessage(), e);
+            throw new InfrastructureException("Erro ao serializar objeto para JSON", e);
         }
     }
 
@@ -39,7 +40,7 @@ public class JsonSerializable implements Serializer {
         try {
             return objectMapper.readValue(bytes, clazz);
         } catch (JsonProcessingException e) {
-            throw new IOException("Erro ao desserializar JSON para objeto: " + e.getMessage(), e);
+            throw new InfrastructureException("Erro ao desserializar JSON para objeto", e);
         }
     }
 

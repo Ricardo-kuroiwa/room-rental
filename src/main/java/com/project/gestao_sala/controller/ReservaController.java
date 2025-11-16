@@ -1,5 +1,6 @@
 package com.project.gestao_sala.controller;
 
+import com.project.gestao_sala.model.reserva.CancelamentoDTO;
 import com.project.gestao_sala.model.reserva.ReservaDTO;
 import com.project.gestao_sala.model.reserva.ReservaFiltroUsuarioDTO;
 import com.project.gestao_sala.model.reserva.ReservaUsuarioDTO;
@@ -34,5 +35,17 @@ public class ReservaController {
             @ModelAttribute ReservaFiltroUsuarioDTO filtros) {
         List<ReservaUsuarioDTO> reservasDoUsuario = reservaAppService.listarReservasPorUsuario(email,filtros);
         return ResponseEntity.ok(reservasDoUsuario);
+    }
+    @PutMapping("/cancelar")
+    public ResponseEntity<String> cancelarReserva(@RequestBody CancelamentoDTO dto) {
+        boolean sucesso = reservaAppService.cancelar(dto);
+
+        if (sucesso) {
+            return ResponseEntity.ok("Reserva cancelada com sucesso.");
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Não foi possível cancelar a reserva. Verifique se o protocolo, espaço e e-mail estão corretos.");
+        }
     }
 }

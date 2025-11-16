@@ -1,1 +1,1 @@
-Usuario|{"nome":"João Silva","email":"joao.silva@empresa.com","senhaHash":"$2a$10$sVYdpv4sVooOFUrOEQBWXOnJWZBZVCxrKueR280FZCutjrmjivH.a","nivel":{"nivel":1,"permissoes":["VIZUALIZAR_ESPACOS","CADASTEAR_ESPACOS","CADASTRAR_USUARIOS","RESERVAR_ESPACOS"]},"telefone":999887766}
+Usuario|{"nome":"João Silva","email":"joao.silva@empresa.com","senhaHash":"$2a$10$Lfw0HrAjE2aCZbOMXcFZZuGEqzkJmvfcyvFssSKPRkyOS9cl.oi1C","nivel":{"nivel":1,"permissoes":["VIZUALIZAR_ESPACOS","CADASTEAR_ESPACOS","CADASTRAR_USUARIOS","RESERVAR_ESPACOS"]},"telefone":999887766}
