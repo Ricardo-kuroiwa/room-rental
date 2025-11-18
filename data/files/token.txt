@@ -1,3 +1,5 @@
+{"token":"e5aceeff-7b99-4758-8c4e-52501f0301c8","email":"kuroiwaricardo1@gmail.com","dataCriacao":"2025-11-17T22:01:45"}
+{"token":"2b9dcb44-278d-4986-8f8a-fc70c04e26c1","email":"kuroiwaricardo1@gmail.com","dataCriacao":"2025-11-17T22:01:28"}
 {"token":"e0f5d928-7165-4a64-9ce3-a4b731a887a0","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:45"}
 {"token":"315e0fd5-bfad-471b-8362-5c1dce56b6e4","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:44"}
 {"token":"3ef1f07c-44da-4717-a270-9ab4bb4c234e","email":"lucas@gmail.com","dataCriacao":"2025-11-07T18:51:43"}

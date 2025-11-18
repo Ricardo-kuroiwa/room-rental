@@ -1,5 +1,6 @@
 package com.project.gestao_sala.services;
 
+import com.project.gestao_sala.model.nivelAcesso.NivelAcesso;
 import com.project.gestao_sala.model.token.Token;
 import com.project.gestao_sala.model.usuario.Usuario;
 import com.project.gestao_sala.plataform.TokenGenerator;
@@ -7,7 +8,6 @@ import com.project.gestao_sala.repository.UsuarioRepository;
 import com.project.gestao_sala.repository.implementacao.AuthFileRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,27 +18,38 @@ public class AuthAppService {
     private  final AuthFileRepository authFileRepository;
     private  final BCryptPasswordEncoder passwordEncoder;
     private  final TokenGenerator tokenGenerator;
+    private final JWTService jwtService;
 
-    public AuthAppService(UsuarioRepository usuarioRepository, AuthFileRepository authFileRepository, TokenGenerator tokenGenerator) {
+    public AuthAppService(UsuarioRepository usuarioRepository, AuthFileRepository authFileRepository, TokenGenerator tokenGenerator, JWTService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.authFileRepository = authFileRepository;
         this.tokenGenerator = tokenGenerator;
+        this.jwtService = jwtService;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public boolean autenticar(String email,String senha){
+    public String autenticar(String email,String senha){
         try{
             Usuario userAlvo  = usuarioRepository.buscar(email);
             if(userAlvo==null){
                 System.err.println("Usuario :  " + email + " não encontrado.");
-                return false;
+                return null;
             }
-            return passwordEncoder.matches(senha, userAlvo.getSenhaHash());
+            if (!passwordEncoder.matches(senha, userAlvo.getSenhaHash())) {
+                System.err.println("Usuario :  " + email + " não encontrado.");
+                return null;
+            }
+            NivelAcesso nivelAcesso = userAlvo.getNivel();
+            String[] permissoes = new String[nivelAcesso.getPermissoes().length];
+            for (int i = 0; i < nivelAcesso.getPermissoes().length; i++) {
+                permissoes[i] = nivelAcesso.getPermissoes()[i].name(); // Convertendo o enum para string
+            }
+            return jwtService.gerarToken(userAlvo.getEmail(), permissoes);
 
 
         } catch (Exception e) {
             System.err.println("Erro ao autenticar usuario: " + e.getMessage());
-            return false;
+            return null;
         }
     }
 

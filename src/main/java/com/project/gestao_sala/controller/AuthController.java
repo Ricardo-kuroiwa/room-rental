@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("auth/")
+@RequestMapping("/auth")
 public class AuthController {
     private final AuthAppService authAppService;
 
@@ -19,12 +19,20 @@ public class AuthController {
         this.authAppService = authAppService;
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO dto) {
-        boolean result = authAppService.autenticar(dto.email(), dto.senha());
-        if (result) {
-            return ResponseEntity.ok(Map.of("message", "Login bem-sucedido!"));
+        String jwt = authAppService.autenticar(dto.email(), dto.senha());
+        System.out.println(jwt);
+        if (jwt != null) {
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "token", jwt,
+                            "message", "Login bem-sucedido!"
+                    )
+            );
         } else {
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Credenciais inválidas."));
         }
