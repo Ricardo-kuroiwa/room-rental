@@ -23,7 +23,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
     }
 
     @Override
-    public Categoria buscar(String nome) {
+    public synchronized Categoria buscar(String nome) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -43,7 +43,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
     }
 
     @Override
-    public Categoria[] listar() {
+    public synchronized Categoria[] listar() {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -60,7 +60,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
     }
 
     @Override
-    public boolean salvar(Categoria c) {
+    public synchronized boolean salvar(Categoria c) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -87,7 +87,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
     }
 
     @Override
-    public boolean deletar(String nome) {
+    public synchronized boolean deletar(String nome) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -118,11 +118,11 @@ public class CategoriaFileRepository implements CategoriaRepository {
     }
 
     @Override
-    public boolean atualizar(Categoria c) {
+    public synchronized boolean atualizar(Categoria c) {
         return salvar(c);
     }
 
-    private Categoria deserializarCategoria(String linha) {
+    private synchronized Categoria deserializarCategoria(String linha) {
         try {
             return (Categoria) serializer.deserialize(linha.getBytes(), Categoria.class);
         } catch (IOException | ClassNotFoundException e) {
@@ -131,7 +131,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
         }
     }
 
-    private String serializarCategoria(Categoria categoria) {
+    private synchronized String serializarCategoria(Categoria categoria) {
         try {
             return new String(serializer.serialize(categoria));
         } catch (IOException e) {
@@ -140,7 +140,7 @@ public class CategoriaFileRepository implements CategoriaRepository {
         }
     }
 
-    private List<Categoria> listarTodos(Handle handle) throws IOException {
+    private synchronized List<Categoria> listarTodos(Handle handle) throws IOException {
         byte[] data = fileStorage.read(handle);
         String fileContent = new String(data);
         if (!fileContent.trim().isEmpty()) {

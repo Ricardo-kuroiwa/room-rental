@@ -51,7 +51,14 @@ public class AdminEspacosAppServices {
             return false;
         }
     }
+    public Espaco findByCodigo(Character codigo){
 
+        try{
+            return espacoFileRepository.buscar(codigo);
+        }catch (Exception e ){
+            return null;
+        }
+    }
     public boolean excluirEspaco(char codigo){
         try {
             return espacoFileRepository.deletar(codigo);

@@ -1,6 +1,8 @@
 package com.project.gestao_sala.controller;
 
+import com.project.gestao_sala.model.categoria.Categoria;
 import com.project.gestao_sala.model.categoria.CategoriaDTO;
+import com.project.gestao_sala.model.nivelAcesso.NivelAcesso;
 import com.project.gestao_sala.model.nivelAcesso.NivelAcessoDTO;
 import com.project.gestao_sala.model.permissao.AtualizarPermissoesDTO;
 import com.project.gestao_sala.model.usuario.UsuarioComumDTO;
@@ -11,7 +13,6 @@ import com.project.gestao_sala.services.AdminUsuariosAppService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class AdminController {
 
     // ========== NÍVEIS DE ACESSO ==========
 
-    @PostMapping("/niveis/create")
+    @PostMapping("/niveis")
     public ResponseEntity<String> criarNivelAcesso(@RequestBody NivelAcessoDTO nivelAcessoDTO) {
         boolean sucesso = adminNiveisAppService.criarNivelAcesso(nivelAcessoDTO);
         if (sucesso) {
@@ -43,7 +44,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/niveis/update/{nivel}")
+    @PutMapping("/niveis/{nivel}")
     public ResponseEntity<String> atualizarNivelAcesso(@PathVariable int nivel,
                                                        @RequestBody AtualizarPermissoesDTO dto) {
         boolean sucesso = adminNiveisAppService.atualizarNivelAcesso(nivel, dto.permissoes());
@@ -55,7 +56,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/niveis/delete/{nivel}")
+    @DeleteMapping("/niveis/{nivel}")
     public ResponseEntity<String> excluirNivelAcesso(@PathVariable int nivel) {
         boolean sucesso = adminNiveisAppService.excluirNivelAcesso(nivel);
         if (sucesso) {
@@ -71,10 +72,20 @@ public class AdminController {
         NivelAcessoDTO[] niveis = adminNiveisAppService.listarNivelAcesso();
         return ResponseEntity.ok(Arrays.asList(niveis));
     }
+    @GetMapping("/niveis/{nivel}")
+    public ResponseEntity<NivelAcesso> getNiveisAcesso(@PathVariable int nivel) {
+        NivelAcesso nivelEncontrado = adminNiveisAppService.findById(nivel);
+
+        if (nivelEncontrado != null) {
+            return ResponseEntity.ok(nivelEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     // ========== CATEGORIAS ==========
 
-    @PostMapping("/categoria/create")
+    @PostMapping("/categoria")
     public ResponseEntity<String> criarCategoria(@RequestBody CategoriaDTO categoriaDTO) {
         boolean sucesso = adminCategoriasAppService.criarCategoria(categoriaDTO);
         if (sucesso) {
@@ -85,7 +96,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/categoria/update/{nome}")
+    @PutMapping("/categoria/{nome}")
     public ResponseEntity<String> atualizarCategoria(@PathVariable String nome,
                                                      @RequestBody CategoriaDTO categoriaDTO) {
         boolean sucesso = adminCategoriasAppService.atualizarCategoria(nome, categoriaDTO.descricao());
@@ -97,7 +108,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/categoria/delete/{nome}")
+    @DeleteMapping("/categoria/{nome}")
     public ResponseEntity<String> deletarCategoria(@PathVariable String nome) {
         boolean sucesso = adminCategoriasAppService.deletarCategoria(nome);
         if (sucesso) {
@@ -113,10 +124,21 @@ public class AdminController {
         CategoriaDTO[] categorias = adminCategoriasAppService.listarCategorias();
         return ResponseEntity.ok(Arrays.asList(categorias));
     }
+    @GetMapping("/categoria/{name}")
+    public ResponseEntity<Categoria> getCategoria(@PathVariable String name) {
+        Categoria categoriaEncontrada = adminCategoriasAppService.findByName(name);
+        System.out.println("Nome : "+name);
+        System.out.println(categoriaEncontrada);
+        if (categoriaEncontrada!=null){
+            return  ResponseEntity.ok(categoriaEncontrada);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     // ========== USUÁRIOS ==========
 
-    @PostMapping("/usuarios/comum/create")
+    @PostMapping("/usuarios/comum")
     public ResponseEntity<String> criarUsuarioComum(@RequestBody UsuarioComumDTO dto) {
         boolean sucesso = adminUsuariosAppService.criarUsuarioComum(dto);
         if (sucesso) {
@@ -127,7 +149,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/usuarios/depto/create")
+    @PostMapping("/usuarios/depto")
     public ResponseEntity<String> criarUsuarioDepto(@RequestBody UsuarioDeptoDTO dto) {
         boolean sucesso = adminUsuariosAppService.criarUsuarioDepto(dto);
         if (sucesso) {
@@ -138,7 +160,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/usuarios/comum/update/{email}")
+    @PutMapping("/usuarios/comum/{email}")
     public ResponseEntity<String> atualizarUsuarioComum(@PathVariable String email,
                                                         @RequestBody UsuarioComumDTO dto) {
         boolean sucesso = adminUsuariosAppService.atualizarUsuarioComum(email, dto);
@@ -151,7 +173,7 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/usuarios/depto/update/{email}")
+    @PutMapping("/usuarios/depto/{email}")
     public ResponseEntity<String> atualizarUsuarioDepto(@PathVariable String email,
                                                         @RequestBody UsuarioDeptoDTO dto) {
         boolean sucesso = adminUsuariosAppService.atualizarUsuarioDepto(email, dto);
@@ -164,7 +186,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/usuarios/delete/{email}")
+    @DeleteMapping("/usuarios/{email}")
     public ResponseEntity<String> deletarUsuario(@PathVariable String email) {
         boolean sucesso = adminUsuariosAppService.deletarUsuario(email);
         if (sucesso) {
@@ -183,7 +205,7 @@ public class AdminController {
 
     @GetMapping("/usuarios/{email}")
     public ResponseEntity<Object> buscarUsuario(@PathVariable String email) {
-        Object usuario = adminUsuariosAppService.buscarUsuario(email);
+        Object usuario = adminUsuariosAppService.findUserByEmail(email);
         if (usuario != null) {
             return ResponseEntity.ok(usuario);
         } else {

@@ -1,3 +1,4 @@
-{"nome":"Sala de professores","descricao":"Capcidade de 20 pessoas"}
-{"nome":"Sala de Musica Especial","descricao":"Capcidade de 20 pessoas"}
-{"nome":"Sala de Musica","descricao":"Capcidade de 230 pessoas"}
+{"nome":"Sala de professores","descricao":"dasnkdna"}
+{"nome":"Sala de coisas","descricao":"Capcidade de 230 pessoas"}
+{"nome":"Sala","descricao":"Capcidade de 230000 pessoas"}
+{"nome":"Laboratório de Ciência aplicada ","descricao":"Usado pelo curso de computação, limita a 45 pessoas em sala"}

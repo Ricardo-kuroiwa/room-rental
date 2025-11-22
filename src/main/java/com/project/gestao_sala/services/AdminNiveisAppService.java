@@ -20,7 +20,7 @@ public class AdminNiveisAppService {
         try{
             NivelAcesso nivelAcesso = new NivelAcesso();
             nivelAcesso.setNivel(dto.nivel());
-            nivelAcesso.setPermissoes(dto.permissaos());
+            nivelAcesso.setPermissoes(dto.permissoes());
 
             nivelAcessoFileRepository.salvar(nivelAcesso);
             return true;
@@ -42,6 +42,14 @@ public class AdminNiveisAppService {
         } catch (Exception e) {
             System.err.println("Erro ao atualizar nível de acesso: " + e.getMessage());
             return false;
+        }
+    }
+    public NivelAcesso findById(int nivel){
+        try{
+            return nivelAcessoFileRepository.buscar(nivel);
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar nível de acesso: " + e.getMessage());
+            return null;
         }
     }
     public boolean excluirNivelAcesso(int nivel){

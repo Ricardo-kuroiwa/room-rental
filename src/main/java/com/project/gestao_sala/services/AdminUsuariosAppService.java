@@ -134,7 +134,19 @@ public class AdminUsuariosAppService {
             return new Object[0];
         }
     }
+    public Usuario findUserByEmail(String email){
+        try {
+            Usuario usuario = usuarioRepository.buscar(email);
+            if (usuario == null) {
+                return null;
+            }
+            return usuario;
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar usuário: " + e.getMessage());
+            return null;
+        }
 
+    }
     public Object buscarUsuario(String email) {
         try {
             Usuario usuario = usuarioRepository.buscar(email);

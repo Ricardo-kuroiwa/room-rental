@@ -29,6 +29,13 @@ public class AdminCategoriasAppService {
             return false;
         }
     }
+    public Categoria findByName(String name){
+        try{
+            return categoriaRepository.buscar(name);
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public boolean atualizarCategoria(String nome,String descricao){
         try{
             Categoria categoria = categoriaRepository.buscar(nome);

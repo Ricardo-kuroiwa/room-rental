@@ -17,9 +17,10 @@ public class JWTService {
     private final SecretKey SECRET =Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long EXPIRACAO = 1000 * 60 * 60 * 2;
 
-    public String gerarToken(String email, String[] permissoes) {
+    public String gerarToken(String email, String nome,String[] permissoes) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("nome",nome)
                 .addClaims(Map.of("permissoes", permissoes))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRACAO))

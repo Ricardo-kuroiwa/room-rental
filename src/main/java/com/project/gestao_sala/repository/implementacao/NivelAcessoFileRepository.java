@@ -23,7 +23,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public NivelAcesso buscar(int nivel) {
+    public synchronized NivelAcesso  buscar(int nivel) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -42,7 +42,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public NivelAcesso[] listar() {
+    public synchronized NivelAcesso[] listar() {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -58,7 +58,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public boolean salvar(NivelAcesso n) {
+    public synchronized boolean salvar(NivelAcesso n) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -87,7 +87,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public boolean deletar(int nivel) {
+    public synchronized boolean deletar(int nivel) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -117,7 +117,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
     }
 
     @Override
-    public boolean atualizar(NivelAcesso n) {
+    public synchronized boolean atualizar(NivelAcesso n) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -151,7 +151,7 @@ public class NivelAcessoFileRepository implements NivelAcessoRepository {
         }
     }
 
-    private List<NivelAcesso> listarTodos(Handle handle) throws IOException {
+    private synchronized List<NivelAcesso> listarTodos(Handle handle) throws IOException {
         byte[] data = fileStorage.read(handle);
         String fileContent = new String(data);
 

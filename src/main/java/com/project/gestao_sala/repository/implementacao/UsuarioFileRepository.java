@@ -24,7 +24,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
     }
 
     @Override
-    public Usuario buscar(String email) {
+    public synchronized  Usuario buscar(String email) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -44,7 +44,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
     }
 
     @Override
-    public Usuario[] listar() {
+    public  synchronized Usuario[] listar() {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -61,7 +61,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
     }
 
     @Override
-    public boolean salvar(Usuario usuario) {
+    public synchronized boolean salvar(Usuario usuario) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -88,7 +88,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
     }
 
     @Override
-    public boolean deletar(String email) {
+    public synchronized boolean deletar(String email) {
         Handle lockHandle = null;
         try {
             lockHandle = fileStorage.lock(FILENAME);
@@ -119,7 +119,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
     }
 
     @Override
-    public boolean atualizar(Usuario usuario) {
+    public synchronized boolean atualizar(Usuario usuario) {
         return salvar(usuario);
     }
 
@@ -165,7 +165,7 @@ public class UsuarioFileRepository implements UsuarioRepository {
         }
     }
 
-    private List<Usuario> listarTodos(Handle handle) throws IOException {
+    private synchronized List<Usuario> listarTodos(Handle handle) throws IOException {
         byte[] data = fileStorage.read(handle);
         String fileContent = new String(data);
 

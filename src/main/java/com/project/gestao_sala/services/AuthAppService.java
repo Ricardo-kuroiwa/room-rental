@@ -44,7 +44,7 @@ public class AuthAppService {
             for (int i = 0; i < nivelAcesso.getPermissoes().length; i++) {
                 permissoes[i] = nivelAcesso.getPermissoes()[i].name(); // Convertendo o enum para string
             }
-            return jwtService.gerarToken(userAlvo.getEmail(), permissoes);
+            return jwtService.gerarToken(userAlvo.getEmail(),userAlvo.getNome(), permissoes);
 
 
         } catch (Exception e) {
